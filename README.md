@@ -1,5 +1,3 @@
-This is a test to see if tracking is working.
-
 Bloom Frequency from MODIS L2 Product Methods
 =============================================
 
