@@ -18,7 +18,7 @@ require(rgdal)
 
 
 # Import BC EEZ
-bc <- readOGR(dsn = "Data/Shapefiles/BC_EEZ", layer = "BC_EEZ_1km_albers")
+bc <- readOGR(dsn = "Boundary", layer = "BC_EEZ_1km_albers")
 
 
 

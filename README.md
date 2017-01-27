@@ -1,3 +1,10 @@
+ Author:       Jessica Nephin  
+ Affiliation:   IOS, Fisheries and Oceans Canada (DFO)  
+ Group:        Marine Spatial Ecology & Analysis, Ecosystems Science Division  
+ Address:      9860 West Saanich Road, Sidney, British Columbia, V8L 4B2, Canada  
+ Contact:      e-mail: jessica.nephin@dfo-mpo.gc.ca | tel: 250.363.6564  
+
+ 
 Bloom Frequency from MODIS L2 Product Methods
 =============================================
 
