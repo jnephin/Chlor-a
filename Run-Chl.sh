@@ -26,7 +26,7 @@ done
 
 cd ../../
 
-# Run points 
+# Run points
 Rscript --vanilla --verbose Scripts/Chl-Points.R
 
 # Run interpolation in Arc python window
@@ -37,3 +37,9 @@ Rscript --vanilla --verbose  Scripts/Chl-Reclass.R
 
 # Run Bloom frequency
 Rscript --vanilla --verbose  Scripts/Chl-Bloom.R
+
+# Run Uncertainty
+Rscript --vanilla --verbose  Scripts/Chl-Uncertainty.R
+
+# Build stats and pyramids
+bash Scripts/BuildStatsPyramids.sh

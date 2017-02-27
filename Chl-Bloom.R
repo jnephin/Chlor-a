@@ -19,10 +19,6 @@ require(fields)
 #-------------------------------------------------------------------------------#
 
 
-# Import BC EEZ
-bc <- readOGR(dsn = "Boundary", layer = "BC_EEZ_1km_albers")
-
-
 #------------------------------#
 #           Reclass            #
 #------------------------------#
@@ -32,16 +28,16 @@ year <- 2012:2015
 month <- c("03","04","05","06")
 for(y in year){
   for(m in month){
-    
+
     # list reclassed spline interpolated Geotiff files
     tifs <-list.files(file.path("Data/Downloads",y,m), pattern="reclass.tif$")
-    
+
     # loop through tifs
     for(f in tifs){
-      
+
       # load Geotiff
       mr <- raster(file.path("Data/Downloads",y,m,f))
-      
+
       # reclass
       rclm <- matrix(data = c(-Inf,2, 0, 2, Inf, 1), ncol=3, byrow=TRUE)
       rc.mr <- reclassify(mr, rcl = rclm, include.lowest = TRUE, right = FALSE) # if(-Inf <= x < 2, then = 0)
@@ -51,14 +47,14 @@ for(y in year){
       name <- paste0(paste("Bloom", tmp[2], tmp[3], tmp[4], sep ="_"),".tif")
       writeRaster(rc.mr, format = "GTiff", datType = "FLT4S", overwrite = TRUE,
                   filename = file.path("Data/Downloads",y,m,name))
-      
-    }   
+
+    }
   }
 }
 
 #------------------------------#
-#       Bloom Frequnecy       #
-#-----------------------------#
+#       Bloom Frequnecy        #
+#------------------------------#
 
 category <- c("straylight", "maskall")
 
@@ -103,37 +99,33 @@ writeRaster(bloom.freq, format = "GTiff", datType = "FLT4S", overwrite = TRUE,
 category <- c("straylight", "maskall")
 
 for(i in category){
-  
+
   # list all spline reclass chla rasters
   chla.list <- list.files(path = "Data/Downloads", pattern = paste0("Chla_",i,"_20*"),
                            full.names = TRUE, recursive = TRUE)
   chla.list <- chla.list[grep("reclass.tif$",chla.list)]
-  
+
   # create raster stack
   chla.stack <- stack(chla.list)
-  
+
   # mean chla rasters in stack
   chla.mean <- calc(chla.stack, mean, na.rm=T)
-  
+
   # reclass NA values to determine where all rasters in stack are == NA
   na.rc <- reclassify(chla.stack, cbind(NA, -1))
   na.chla <- calc(na.rc, sum)
-  
+
   # reclass -16 (all raster are == NA) back to NA
   rclf <- matrix(data = c(-Inf,-16, NA, -16, Inf, 0), ncol=3, byrow=TRUE)
   rc.freq <- reclassify(na.chla, rcl = rclf, include.lowest = TRUE, right = TRUE) # if(-Inf < x <= -16, then = NA)
-  
+
   # sum chla mean raster and NA reclass raster
   na.stack <- stack(chla.mean,rc.freq)
   chla.mean <- calc(na.stack, sum)
-  
+
   # export chla mean raster
   name <- paste0("Chla_mean_",i,".tif")
   writeRaster(chla.mean, format = "GTiff", datType = "FLT4S", overwrite = TRUE,
               filename = file.path("Data",name))
-  
+
 }
-
-
-
-
