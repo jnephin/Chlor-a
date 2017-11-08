@@ -1,34 +1,32 @@
 ## Created by Jessica Nephin
-## Last edited 2016-11-04
+## Last edited 2017-11-08
 
 ## Download full res aqua MODIS L2 products from 2012 to 2015 
-## Daily between March 18 and June 21
+## Daily between Feb and Nov
 
 ## Run via command line using:
-##### nohup Rscript --vanilla --verbose Chl-Download.R year month >logs/logfilename.out &
+##### nohup Rscript --vanilla --verbose Scripts/Chl-Download.R year >Logs/year.out&
 ## Command line arguments:
 ##### 1) year e.g. 2012
-##### 2) month e.g. 3
 
 
 # required packages
 require(stringr)
 require(ncdf4)
 
-# working directory
-setwd('..')
-
 
 #---------------------------------------------------------------------------------------#
 
 
 # NASA ocean colour data
-siteurl <- "http://oceandata.sci.gsfc.nasa.gov"
+siteurl <- "https://oceandata.sci.gsfc.nasa.gov"
 
 # years command line argument
 args = commandArgs(trailingOnly=TRUE)
 year <- args[1]
-mnth <- paste0("0", args[2])
+#year <- 2012
+mnth <-  c(2,3,6,7,8,9,10,11) # get data from missing months
+mnth <-  sprintf("%02d", mnth)
 
 # days in a year
 days <- 1:365
@@ -39,38 +37,45 @@ dates$date <- as.Date(dates$x-1, origin=paste(year,"01-01", sep = "-"))
 dates$month <- format(dates$date, "%m")
 dates$day <- format(dates$date, "%d")
 
-# subset datetime for timeframe of interest
-# March 18 and June 21
-tf <- dates[dates$month == mnth,]
-tf <- tf[(tf$month == "03" & tf$day > 17) | tf$month == "04" | tf$month == "05" | 
-           (tf$month == "06" & tf$ day < 22),]
+# subset month for timeframe of interest
+tf <- dates[dates$month %in% mnth,]
 
 
 #---------------------------------------------------------------------------------------#
 # Get files name which have already been downloaded (including those deleted) from nohup
 
+
 # list download log files (stderr and stdout)
-log.list <- list.files(path = file.path("Scripts/logs"), pattern = "*.out", full.names = TRUE)
+log.list <- list.files(path = file.path("Logs"), pattern = paste0(year,".out"), full.names = TRUE)
 
-# read in logs and append
-out <- NULL
-for(l in log.list){
-  tmp <- readLines(l)
-  out <- c(out,tmp)
+# if there are log files
+if( length(log.list) != 0 ){
+  
+  # read in logs and append
+  out <- NULL
+  for(l in log.list){
+    tmp <- readLines(l)
+    out <- c(out,tmp)
+  }
+  
+  # get lines with just file names
+  dls <- grep("Data/Downloads/",out, value = TRUE)
+  dls <- grep(" saved ",dls, value = TRUE)
+  
+  #extract file names
+  fn <- sub(".*Data/Downloads/","",dls)
+  fn <- sub(".L2_LAC_OC.nc.*",".L2_LAC_OC.nc",fn)
+  fn <- sub(".*/","",fn)
+  
+  # list files already in folder
+  nc.list <- list.files(path = file.path("Data/Downloads",year), pattern = "*.nc", recursive = T)
+  nc.list <- sub(".*/","",nc.list)
+  dlist <- unique(c(nc.list,fn))
+  
+} else {
+  dlist <- list.files(path = file.path("Data/Downloads",year), pattern = "*.nc", recursive = T)
+  dlist <- sub(".*/","",dlist)
 }
-
-# get lines with just file names
-dls <- grep("Data/Downloads/",out, value = TRUE)
-dls <- grep(" saved ",dls, value = TRUE)
-
-#extract file names
-fn <- sub(".*Data/Downloads/","",dls)
-fn <- sub(".L2_LAC_OC.nc.*",".L2_LAC_OC.nc",fn)
-fn <- sub(".*/","",fn)
-
-# list files already in folder
-nc.list <- list.files(path = file.path("Data/Downloads",year,mnth), pattern = "*.nc")
-nc.list <- unique(c(nc.list,fn))
 
 
 #---------------------------------------------------------------------------------------#
@@ -95,14 +100,17 @@ nc.list <- unique(c(nc.list,fn))
     files <- files[times > 1900 & times < 2400]
     
     # remove files already downloaded
-    files <- files[!files %in% nc.list]
+    files <- files[!files %in% dlist]
+    
+    # month 
+    month <- tf$month[i] 
     
     # loop through files
     if(length(files) > 0){
     for(f in files){
       
       # filename
-      ddir <- paste("Data/Downloads", year, mnth, sep = "/")
+      ddir <- paste("Data/Downloads", year, month, sep = "/")
       suppressWarnings(dir.create(ddir,recursive=TRUE))
       dfile <- file.path(ddir, f)
       

@@ -8,7 +8,7 @@
 Bloom Frequency from MODIS L2 Product Methods
 =============================================
 
-** For more detailed procedures and methods refer to codes in the Scripts directory **
+** For more detailed procedures and methods refer to code in the Scripts directory **
 
 The following describes the automated process of transforming the MODIS L2 (1 x 1 km) Chlor_a
 (mg m^-3) band into the frequency of monthly plankton blooms between March 18 and June 21
