@@ -2,7 +2,7 @@
 ## Last edited 2017-02-27
 
 ## Calculates chl-a uncertainty
-## Uncertainty layer = 0-16,
+## Uncertainty layer = 0-32,
 ## the number of times the cell values were derived from extrapolation
 
 
@@ -47,8 +47,8 @@ chl.stack <- stack(chl.list, bands = 1)
 rcl <- matrix(data = c(-Inf, 0, 1, 0, Inf, 0), ncol=3, byrow=TRUE)
 frq.stack <- reclassify(chl.stack, rcl = rcl, include.lowest = TRUE, right = TRUE) # if(-Inf < x <= 0, then = 1)
 
-# sum frequency (0 to 16) to get uncertainty layer
-# 0 = never interpolated, 16 = always interpolated (no data for that cell)
+# sum frequency (0 to 32) to get uncertainty layer
+# 0 = never interpolated, 32 = always interpolated (no data for that cell)
 uncLayer <- calc(frq.stack, sum, na.rm=T)
 
 # mask with 1km buffered BC EEZ

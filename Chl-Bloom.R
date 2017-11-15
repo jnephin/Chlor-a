@@ -25,7 +25,7 @@ require(fields)
 
 # loop through year and month sub directories
 year <- 2012:2015
-month <- c("03","04","05","06")
+month <- c("03","04","05","06","07","08","09","10")
 for(y in year){
   for(m in month){
 
@@ -38,9 +38,9 @@ for(y in year){
       # load Geotiff
       mr <- raster(file.path("Data/Downloads",y,m,f))
 
-      # reclass
-      rclm <- matrix(data = c(-Inf,2, 0, 2, Inf, 1), ncol=3, byrow=TRUE)
-      rc.mr <- reclassify(mr, rcl = rclm, include.lowest = TRUE, right = FALSE) # if(-Inf <= x < 2, then = 0)
+      # reclass (cut-off greater than 3 mg/m^3)
+      rclm <- matrix(data = c(-Inf,3, 0, 3, Inf, 1), ncol=3, byrow=TRUE)
+      rc.mr <- reclassify(mr, rcl = rclm, include.lowest = TRUE, right = FALSE) # if(-Inf <= x < 3, then = 0)
 
       # export bloom raster
       tmp <- strsplit(f,"_")[[1]]
@@ -67,18 +67,18 @@ bloom.list <- list.files(path = "Data/Downloads", pattern = paste0("Bloom_",i,"_
 # create raster stack
 bloom.stack <- stack(bloom.list)
 
-# sum bloom rasters in stack to get frequency (0 to 16)
+# sum bloom rasters in stack to get frequency (0 to 32)
 bloom.freq <- calc(bloom.stack, sum, na.rm=T)
 
 # reclass NA values to determine where all rasters in stack are == NA
 na.rc <- reclassify(bloom.stack, cbind(NA, -1))
 na.freq <- calc(na.rc, sum)
 
-# reclass -16 (all raster are == NA) back to NA
-rclf <- matrix(data = c(-Inf,-16, NA, -16, 16, 0), ncol=3, byrow=TRUE)
+# reclass -32 (all raster are == NA) back to NA
+rclf <- matrix(data = c(-Inf,-32, NA, -32, 32, 0), ncol=3, byrow=TRUE)
 rc.freq <- reclassify(na.freq, rcl = rclf, include.lowest = TRUE, right = TRUE) # if(-Inf < x <= -16, then = NA)
 
-# sum bloom rasters in stack to get frequency (0 to 16)
+# sum bloom rasters in stack to get frequency (0 to 32)
 na.stack <- stack(bloom.freq,rc.freq)
 bloom.freq <- calc(na.stack, sum)
 #plot(bloom.freq)
@@ -116,7 +116,7 @@ for(i in category){
   na.chla <- calc(na.rc, sum)
 
   # reclass -16 (all raster are == NA) back to NA
-  rclf <- matrix(data = c(-Inf,-16, NA, -16, Inf, 0), ncol=3, byrow=TRUE)
+  rclf <- matrix(data = c(-Inf,-32, NA, -32, Inf, 0), ncol=3, byrow=TRUE)
   rc.freq <- reclassify(na.chla, rcl = rclf, include.lowest = TRUE, right = TRUE) # if(-Inf < x <= -16, then = NA)
 
   # sum chla mean raster and NA reclass raster

@@ -5,7 +5,7 @@
 ## Daily between Feb and Nov
 
 ## Run via command line using:
-##### nohup Rscript --vanilla --verbose Scripts/Chl-Download.R year >Logs/year.out&
+##### nohup Rscript --vanilla --verbose Scripts/Chl-Download.R year 1>> Logs/year.out 2>&1
 ## Command line arguments:
 ##### 1) year e.g. 2012
 

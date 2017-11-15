@@ -24,40 +24,35 @@ bc <- readOGR(dsn = "Boundary", layer = "BC_EEZ_1km_albers")
 
 # loop through year and month sub directories
 year <- 2012:2015
-month <- c("03","04","05","06")
+month <- c("02","03","04","05","06","07","08","09","10","11")
 for(y in year){
   for(m in month){
-    
+
     # list Mosaiced Geotiff files
     tifs <-list.files(file.path("Data/Downloads",y,m), pattern="spline.tif$")
-    
+
     # loop through tifs
     for(f in tifs){
-      
+
       # load spline raster
       ras <- raster(file.path("Data/Downloads",y,m,f),band = 1)
-      
+
       #reclass negatives to zeros
       rclna <- matrix(data = c(-Inf,0, 0), ncol=3, byrow=TRUE)
       r <- reclassify(ras, rcl = rclna, include.lowest = TRUE, right = TRUE) # if(-Inf < x <= 0, then = NA)
       #plot(r)
       #plot(bc, add=T)
-      
+
       # mask reclass with 1km buffered BC EEZ
       r <- mask(r,bc)
       #plot(r)
-      
+
       # write reclass and masked raster
       outname <- paste0(sub(".tif","",f),"_reclass.tif")
-      writeRaster(r, filename = file.path("Data/Downloads",y,m,outname), 
+      writeRaster(r, filename = file.path("Data/Downloads",y,m,outname),
                   format = "GTiff", datType = "FLT4S", overwrite = TRUE)
-      
-      
+
+
     }
   }
 }
-
-
-
-
-

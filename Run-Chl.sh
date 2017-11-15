@@ -1,4 +1,4 @@
-#
+# run from Data/Downloads
 for d in */; do
    cd $d
    y="$d"
@@ -9,16 +9,16 @@ for d in */; do
        for f in *.nc; do
          e=${f%.nc}
 		 x="${e}_straylight"
-         gpt F:\\Chl_a\\Scripts\\Project-Mask-nostraylight.xml -Ssource=$f -Pexportfilename=$e
-		 gpt F:\\Chl_a\\Scripts\\Project-Mask-straylight.xml -Ssource=$f -Pexportfilename=$x
+         gpt E:\\AbioticData\\Remote_Sensing\\Chl_a\\Scripts\\Project-Mask-nostraylight.xml -Ssource=$f -Pexportfilename=$e
+		 gpt E:\\AbioticData\\Remote_Sensing\\Chl_a\\Scripts\\Project-Mask-straylight.xml -Ssource=$f -Pexportfilename=$x
        done
 	   # Mosaic monthly chlor_a with and without straylight masked
 	   i=$(ls *.L2_LAC_OC.tif)
 	   t="Chla_maskall_${y:0:4}_${m:0:2}"
-	   gpt F:\\Chl_a\\Scripts\\Mosaic.xml -Pexportfilename=$t $i
+	   gpt E:\\AbioticData\\Remote_Sensing\\Chl_a\\Scripts\\Mosaic.xml -Pexportfilename=$t $i
 	   j=$(ls *.L2_LAC_OC_straylight.tif)
 	   z="Chla_straylight_${y:0:4}_${m:0:2}"
-	   gpt F:\\Chl_a\\Scripts\\Mosaic.xml -Pexportfilename=$z $j
+	   gpt E:\\AbioticData\\Remote_Sensing\\Chl_a\\Scripts\\Mosaic.xml -Pexportfilename=$z $j
      cd ..
      done
    cd ..
@@ -30,7 +30,7 @@ cd ../../
 Rscript --vanilla --verbose Scripts/Chl-Points.R
 
 # Run interpolation in Arc python window
-SplineBarriers.py
+python Scripts/SplineBarriers.py
 
 # Run reclass
 Rscript --vanilla --verbose  Scripts/Chl-Reclass.R
