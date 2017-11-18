@@ -11,16 +11,15 @@ Bloom Frequency from MODIS L2 Product Methods
 ** For more detailed procedures and methods refer to code in the Scripts directory **
 
 The following describes the automated process of transforming the MODIS L2 (1 x 1 km) Chlor_a
-(mg m^-3) band into the frequency of monthly plankton blooms between March 18 and June 21
-over a 4 year period from 2012 to 2015. These dates were chosen by Ed Gregr to temporally
-cover the average timing of the spring bloom in BC waters (Stockner et al. 1979; Pan et al. 1988;
-Pen~a et al. 1999).
+(mg m^-3) band into the frequency of monthly plankton blooms between March and October
+over a 4 year period from 2012 to 2015. November to February were excluded because of limited 
+data due to increased cloud cover.
 
 
 Download
 --------
 * Download full res (1km) daily swath data (L2) from aqua MODIS from 2012 to 2015 between
-March 18 and June 21. Data source: http://oceandata.sci.gsfc.nasa.gov
+March and October. Data source: http://oceandata.sci.gsfc.nasa.gov
 * Only download daily swaths between 19:00 and 24:00 UTC when aqua MODIS is capturing data
 from the BC region.
 * Delete daily swaths if they do not include any data in the region of interest (BC EEZ).
@@ -57,51 +56,36 @@ Interpolate
 Bloom Frequency
 ----------------
 * Monthly bloom frequency was caluclated in R using the raster package.
-* Cells with Chlor_a ≥ 2.0 mg m^-3 were reclassified as blooming. For each month, each cell was
-classified as either blooming (== 1) or not (== 0).
-* The 2 mg m^-3 was used by (Gregr et al., 2016), it is the average of two thresholds reported for
-the study area (> 1 mg/m3, Gower 2004, and > 3 mg/m3, Mackas et al. 2007).
-* Monthly bloom rasters were added together to calculate bloom frequency which ranged between 0 to 16.
-Values of 16 represent regions where monthly Chla concentrations exceeded the bloom threshold during
-all months between March 18 and June 21 over a 4 year period from 2012 to 2015.
+* Cells with Chlor_a ≥ 3.0 mg m^-3 were reclassified as blooming. For each month, each cell was
+classified as either blooming (== 1) or not (== 0). This method was previously used by Gregr et al. (2016).
+* The 3 mg m^-3 is a chlorophyll bloom threshold reported for the study area (Mackas et al. 2007).
+* Monthly bloom rasters were added together to calculate bloom frequency which ranged from 0 to 32.
+Values of 32 represent regions where monthly Chla concentrations exceeded the bloom threshold during
+all months from March to October over a 4 year period from 2012 to 2015.
+
 
 Mean Chla
 ---------
 * Mean chla (from the monthly interpolated chla) was caluclated in R using the raster package.
 
+
 Uncertainty
 -----------
 * Uncertainty layer represents the extent to which the chl-a layer was interpolated/extrapolated.
-* Uncertainty values represent the frequency (0 to 16) each cell was interpolated. A value of 16
-indicates that no data vas available for that cell for the 16 months examined. A value of 0 indicates
-that there was data available for that cell for all 16 months examined.
+* Uncertainty values represent the frequency (0 to 32) each cell was interpolated. A value of 32
+indicates that no data vas available for that cell for the 32 months examined. A value of 0 indicates
+that there was data available for that cell for all 32 months examined.
 * The uncertainty layers for both maskall and straylight products, helps visualize the
 differences between the two layers.
-
-
 
 
 References
 ----------
 
-		Gower, J.F.R. 2004. SeaWiFS global composite images show significant features of Canadian
-		waters for 1997-2001. Canadian Journal of Remote Sensing 30:26-35.
-
-		Gregr, E. J., Gryba, R., Li, M. Z., Alidina, H., Kostylev, V., & Hannah, C. G. (2016).
-		A Benthic Habitat Template for Pacific Canada ’s Continental Shelf (312th ed.). Canadian
-		Technical Report of Hydrography and Ocean Sciences.
+		Gregr, E.J., Gryba, R., Li, M.Z., Alidina, H., Kostylev, V., and Hannah, C.G. 2016. A 
+                benthic habitat template for Pacific Canada’s continental shelf. Can. Tech. Rep. Hydrogr. 
+                Ocean Sci. 312: vii + 37 p.
 
 		Mackas, D., Peña, A., Johannessen, D., Birch, R., Borg, K., and Fissel, D. 2007. Appendix D:
 		Plankton. Pages iv + 33 p. in Lucas BG, Verrin S, Brown R, eds. Ecosystem overview: Pacific
 		North Coast Integrated Management Area (PNCIMA), vol. 2667 Can. Tech. Rep. Fish. Aquat. Sci.
-
-		Pan, D., J. F. R. Gower, and G. A. Borstad. 1988. Seasonal variation of the surface
-		chlorophyll distribution along the British Columbia coast as shown by CZCS satellite
-		imagery. Limnology and Oceanography 33(2):227-244.
-
-		Pen~a, M. A., K. L. Denman, S. E. Calvert, R. E. Thomson, and J. R. Forbes. 1999.
-		The seasonal cycle in sinking particle fluxes off Vancouver Island, British Columbia.
-		Deep-Sea Research II 46:2969-2992.
-
-		Stockner, J. G., D. D. Cliff, and K. R. S. Shortreed. 1979. Phytoplankton ecology of
-		the Strait of Georgia, British Columbia. J. Fish. Res. Board Can. 36:657-666.
