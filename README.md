@@ -47,7 +47,8 @@ Mosaic
 
 Interpolate
 -----------
-* Monthly mosaiced Chlor_a was interpolated to fill remaining data gaps (from clouds for example).
+* The monthly ChlA data was interpolated spatially using Spline with Barriers (ArcGIS 10.4) to fill in 
+any gaps that remained after mosaicking. These gaps were typically located nearshore and in coastal inlets. 
 * Raster interpolation was performed in ArcMap using Spline with Barrier algorithm (SplineBarriers.py).
 * Chla was interpolated with a 1 x 1 km cell size (its native resolution)
 * Both products, 1) all masked and 2) no straylight masked, were interpolated.
@@ -77,6 +78,9 @@ indicates that no data vas available for that cell for the 32 months examined. A
 that there was data available for that cell for all 32 months examined.
 * The uncertainty layers for both maskall and straylight products, helps visualize the
 differences between the two layers.
+* To limit highly uncertain values, mainly in those areas, the interpolated ChlA surface was 
+constrained by re-classifying locations which had data gaps in all 32 months to ‘no data’. This 
+layer was suffixed with 'noextrap'.
 
 
 References
