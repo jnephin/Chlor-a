@@ -8,11 +8,9 @@
 Bloom Frequency from MODIS L2 Product Methods
 =============================================
 
-** For more detailed procedures and methods refer to code in the Scripts directory **
-
 The following describes the automated process of transforming the MODIS L2 (1 x 1 km) Chlor_a
 (mg m^-3) band into the frequency of monthly plankton blooms between March and October
-over a 4 year period from 2012 to 2015. November to February were excluded because of limited 
+over a 4 year period from 2012 to 2015. November to February were excluded because of limited
 data due to increased cloud cover.
 
 
@@ -47,8 +45,8 @@ Mosaic
 
 Interpolate
 -----------
-* The monthly ChlA data was interpolated spatially using Spline with Barriers (ArcGIS 10.4) to fill in 
-any gaps that remained after mosaicking. These gaps were typically located nearshore and in coastal inlets. 
+* The monthly ChlA data was interpolated spatially using Spline with Barriers (ArcGIS 10.4) to fill in
+any gaps that remained after mosaicking. These gaps were typically located nearshore and in coastal inlets.
 * Raster interpolation was performed in ArcMap using Spline with Barrier algorithm (SplineBarriers.py).
 * Chla was interpolated with a 1 x 1 km cell size (its native resolution)
 * Both products, 1) all masked and 2) no straylight masked, were interpolated.
@@ -78,16 +76,16 @@ indicates that no data vas available for that cell for the 32 months examined. A
 that there was data available for that cell for all 32 months examined.
 * The uncertainty layers for both maskall and straylight products, helps visualize the
 differences between the two layers.
-* To limit highly uncertain values, mainly in those areas, the interpolated ChlA surface was 
-constrained by re-classifying locations which had data gaps in all 32 months to ‘no data’. This 
+* To limit highly uncertain values, mainly in those areas, the interpolated ChlA surface was
+constrained by re-classifying locations which had data gaps in all 32 months to ‘no data’. This
 layer was suffixed with 'noextrap'.
 
 
 References
 ----------
 
-		Gregr, E.J., Gryba, R., Li, M.Z., Alidina, H., Kostylev, V., and Hannah, C.G. 2016. A 
-                benthic habitat template for Pacific Canada’s continental shelf. Can. Tech. Rep. Hydrogr. 
+		Gregr, E.J., Gryba, R., Li, M.Z., Alidina, H., Kostylev, V., and Hannah, C.G. 2016. A
+                benthic habitat template for Pacific Canada’s continental shelf. Can. Tech. Rep. Hydrogr.
                 Ocean Sci. 312: vii + 37 p.
 
 		Mackas, D., Peña, A., Johannessen, D., Birch, R., Borg, K., and Fissel, D. 2007. Appendix D:
